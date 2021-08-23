@@ -4,14 +4,14 @@ require_once "config.php";
 
 // Define variables and initialize with empty values
 $fname_err = $lname_err = $email_err = $contact_err ="" ;
-$street_add_err = $city_err = $state_err = $postcode_err = $password_err = $confirm_password_err = "";
+$street_add_err = $city_err = $state_err = $postcode_err = $password_err = $confirm_password_err =$profile_img_err= "";
 $fname = $lname = $email = $contact ="";
 $street_add = $city = $state = $postcode = $password = $confirm_password = ""; 
 
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-
+    
         if (empty($_POST["fname"])) {
           $fname_err = "First Name is required";
         }elseif(!preg_match('/^[a-zA-Z]*$/', trim($_POST["fname"]))){
@@ -138,7 +138,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($fname_err) && empty($lname_err) && empty($email_err) && 
     empty($contact_err) && empty($city_err) && empty($state_err) && 
     empty($postcode_err) && empty($profile_img_err) && empty($password_err) && 
-    empty($stare_add_err) && empty($confirm_password_err)){
+    empty($state_add_err) && empty($confirm_password_err)){
         
         // Prepare an insert statement
         $sql = "INSERT INTO users (fname, lname,profile_image,email,contact,
@@ -178,25 +178,32 @@ function test_input($data) {
     <meta charset="UTF-8">
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
     <style>
         body{ font: 14px sans-serif; }
         .wrapper{ width: 600px; padding: 20px; margin:auto;}
         .form-control.is-invalid{ background-image:none;}
+        .error {
+    color: red;
+    font-size: 90%;
+}
     </style>
+    <script type="text/javascript" src="/webapp_project_radhika/js/form-validate.js"></script>
+
   </head>
   <body>
     <div class="wrapper">
         <h2>Sign Up</h2>
         <h5>Please fill this form to create an account.</h5>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" 
-        method="post" enctype="multipart/form-data">
+        <form id="rForm" name="registerform"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" 
+        method="post" onSubmit="return formValidation();" enctype="multipart/form-data">
             <div class="form-row">
               <div class="form-group col-md-6">
                   <label>First Name</label>
                   <input type="text" name="fname" class="form-control 
                   <?php echo (!empty($fname_err)) ? 'is-invalid' : ''; ?>" 
                   value="<?php echo $fname; ?>">
-                  <span class="invalid-feedback"><?php echo $fname_err; ?></span>
+                  <div class = "error" id="fname_err"> <?php echo $fname_err;?></div>
               </div>
               
               <div class="form-group col-md-6">
@@ -204,7 +211,7 @@ function test_input($data) {
                   <input type="text" name="lname" class="form-control
                   <?php echo (!empty($lname_err)) ? 'is-invalid' : ''; ?>" 
                   value="<?php echo $lname; ?>">
-                  <span class="invalid-feedback"><?php echo $lname_err; ?></span>
+                  <div class="error" id="lname_err"><?php echo $lname_err; ?></div>
               </div> 
             </div>
             <div class="form-row">
@@ -213,7 +220,7 @@ function test_input($data) {
                   <input type="file" class="form-control-file 
                   <?php echo (!empty($profile_img_err)) ? 'is-invalid' : ''; ?>" 
                   id="exampleFormControlFile1" name="profile_image" value="<?php echo $profile_img; ?>">
-                  <span class = "invalid-feedback"> <?php echo $profile_img_err;?></span>
+                  <div class = "error" id="profile_img_err"> <?php echo $profile_img_err;?></div>
               </div>
             </div>
             <div class="form-row" >
@@ -222,14 +229,14 @@ function test_input($data) {
                 <input type = "text" name = "email" class="form-control 
                     <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>"
                     value="<?php echo $email; ?>">
-                <span class = "invalid-feedback"> <?php echo $email_err;?></span>
+                <div class = "error" id="email_err"> <?php echo $email_err;?></div>
               </div>
               <div class="form-group col-md-6">
                 <label>Contact</label>
                 <input type = "text" name = "contact" class="form-control 
                     <?php echo (!empty($contact_err)) ? 'is-invalid' : ''; ?>"
                     value="<?php echo $contact; ?>">
-                <span class = "invalid-feedback"> <?php echo $contact_err;?></span>
+                <div class = "error" id="contact_err"> <?php echo $contact_err;?></div>
               </div>
             </div>
             <div class="form-row">
@@ -238,21 +245,21 @@ function test_input($data) {
                 <input type = "text" name = "street_add" class="form-control 
                     <?php echo (!empty($street_add_err)) ? 'is-invalid' : ''; ?>"
                     value="<?php echo $street_add; ?>">
-                <span class = "invalid-feedback"> <?php echo $street_add_err;?></span>
+                <div class = "error" id="street_add_err"> <?php echo $street_add_err;?></div>
               </div>
               <div class="form-group col-md-6">
                 <label>City/Suburb</label>
                 <input type = "text" name = "city" class="form-control 
                   <?php echo (!empty($city_err)) ? 'is-invalid' : ''; ?>"
                   value="<?php echo $city; ?>">
-                <span class = "invalid-feedback"> <?php echo $city_err;?></span>
+                <div class = "error" id="city_err"> <?php echo $city_err;?></div>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-4">
                 <label for="inputState">State</label>
                 <select id="inputState" class="form-control 
-                  <?php echo (!empty($city_err)) ? 'is-invalid' : ''; ?>"
+                  <?php echo (!empty($state_err)) ? 'is-invalid' : ''; ?>"
                   name="state">
                   <option selected value="0">Choose...</option>
                   <option value="ACT">ACT</option>
@@ -263,16 +270,15 @@ function test_input($data) {
                   <option value="VIC">VIC</option>
                   <option value="TAS">TAS</option>
                   <option value="WA">WA</option>
-                  <span class = "invalid-feedback"> <?php echo $state_err;?></span>
                 </select>
-                <span class = "invalid-feedback"> <?php echo $state_err;?></span>
+                <div class = "error" id="state_err"> <?php echo $state_err;?></div>
               </div>
               <div class="form-group col-md-4">
                 <label>Postcode</label>
                 <input type = "text" name = "postcode" class="form-control 
                   <?php echo (!empty($postcode_err)) ? 'is-invalid' : ''; ?>"
                   value="<?php echo $postcode; ?>">
-                <span class = "invalid-feedback"> <?php echo $postcode_err;?></span>
+                <div class = "error" id="postcode_err"> <?php echo $postcode_err;?></div>
               </div>
               <div class="form-group col-md-4">
                 <label>Country</label>
@@ -286,18 +292,18 @@ function test_input($data) {
                 <input type="password" name="password" class="form-control 
                 <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" 
                 value="<?php echo $password; ?>">
-                <span class="invalid-feedback"><?php echo $password_err; ?></span>
+                <div class="error" id="password_err"><?php echo $password_err; ?></div>
               </div>
               <div class="form-group col-md-6">
                 <label>Confirm Password</label>
                 <input type="password" name="confirm_password" class="form-control 
                 <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" 
                 value="<?php echo $confirm_password; ?>">
-                <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
+                <div class="error" id="confirm_password_err"><?php echo $confirm_password_err; ?></div>
               </div>
             </div>
             <div class="form-group">
-              <input type="submit" class="btn btn-primary" value="Submit">
+              <input type="submit" class="btn btn-primary" value="Submit" id="SubmitBtn">
               <input type="reset" class="btn btn-secondary ml-2" value="Reset">
             </div>
             <h5>Already have an account? <a href="login.php">Login here</a>.</h5>

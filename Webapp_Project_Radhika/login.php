@@ -92,6 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         .wrapper{ width: 600px; padding: 20px; margin:auto; }
         .form-control.is-invalid{ background-image:none; }
     </style>
+    <script type="test/javascript" src="/webapp_project_radhika/js/form-validate.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -102,19 +103,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 echo '<div class="alert alert-danger">' . $login_err . '</div>';
             }        
         ?>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form name="loginForm" onSubmit="return loginValidation();" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group">
                 <label>Email</label>
                 <input type="text" name="email" class="form-control
                     <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>"
                     value="<?php echo $email; ?>">
-                <span class="invalid-feedback"><?php echo $email_err; ?></span>
+                <div class="error" id="email_err"><?php echo $email_err; ?></div>
             </div>    
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control 
                 <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
-                <span class="invalid-feedback"><?php echo $password_err; ?></span>
+                <div class="error" id="password_err"><?php echo $password_err; ?></div>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Login">
